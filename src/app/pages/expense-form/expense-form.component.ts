@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ExpenseService } from '../../core/services/expense.service';
 import { snapshotChanges } from '@angular/fire/compat/database';
 import { IExpense } from '../../core/models/common.model';
@@ -13,11 +13,12 @@ import { IExpense } from '../../core/models/common.model';
   templateUrl: './expense-form.component.html',
   styleUrl: './expense-form.component.scss'
 })
-export class ExpenseFormComponent implements OnInit{
+export class ExpenseFormComponent implements OnInit {
   expenses: IExpense[] = [];
   expenseForm!: FormGroup;
+  expenseId = '';
 
-  constructor(private fb: FormBuilder, private expenseService: ExpenseService, private router: Router){
+  constructor(private fb: FormBuilder, private expenseService: ExpenseService, private router: Router, private activatedRoute: ActivatedRoute) {
     this.expenseForm = this.fb.group({
       price: new FormControl('', [Validators.required]),
       title: new FormControl('', [Validators.required]),
@@ -26,23 +27,33 @@ export class ExpenseFormComponent implements OnInit{
   }
 
   ngOnInit(): void {
-
+    this.activatedRoute.params.subscribe({
+      next: (params) => {
+        this.expenseId = params['id'];
+        this.getExpense(this.expenseId);
+      }
+    })
   }
 
-  getAllExpenses(){
+  getAllExpenses() {
     this.expenseService.getAllExpenses().snapshotChanges().subscribe({
-      next: (data)=> {
-        console.log('Data ==> ',data)
+      next: (data) => {
+        console.log('Data ==> ', data)
       },
     })
   }
 
-  onSubmit(){
-    if(this.expenseForm.valid){
+  onSubmit() {
+    if (this.expenseForm.valid) {
       console.log('Form ==>', this.expenseForm.value);
-      this.expenseService.addExpense(this.expenseForm.value);
+      if (this.expenseId !== '') {
+        this.expenseService.updateExpense(this.expenseId, this.expenseForm.value);
+      } else {
+        this.expenseService.addExpense(this.expenseForm.value);
+      }
+
       this.router.navigate(['/']);
-    }else{
+    } else {
       this.expenseForm.markAllAsTouched();
     }
   }
@@ -55,5 +66,14 @@ export class ExpenseFormComponent implements OnInit{
   //     this.expenseForm.markAllAsTouched();
   //   }
   // }
+
+  getExpense(key: string) {
+    this.expenseService.getExpense(key).snapshotChanges().subscribe({
+      next: (data) => {
+        let expense = data.payload.toJSON() as IExpense;
+        this.expenseForm.setValue(expense);
+      }
+    })
+  }
 
 }
