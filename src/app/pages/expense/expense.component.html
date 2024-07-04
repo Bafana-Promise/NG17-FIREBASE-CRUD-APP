@@ -1,21 +1,20 @@
 <div class="mb-4 d-flex justify-content-between align-item-center">
   <button type="button" routerLink="/expense-form" class="btn btn-primary">Add Expense</button>
-  <h5 class="fw-bold">Total Expense: <strong class="text-success">$180</strong></h5>
+  <h5 class="fw-bold">Total Expense: <strong class="text-success">{{totalExpenses}}</strong></h5>
 </div>
 
 <div class="d-flex flex-column gap-3">
-  <!-- @for(expense of expenses; track $index){ -->
+  @for(expense of expenses; track $index){
   <div class="card">
     <div class="card-body">
-      <h5 class="card-title">Card title</h5>
-      <h2 class="fw-bold text-success">$180</h2>
-      <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
-        content.</p>
+      <h5 class="card-title">{{expense.title}}</h5>
+      <h2 class="fw-bold text-success">{{expense.price}}</h2>
+      <p class="card-text">{{expense.description}}</p>
       <div class="d-flex gap-2">
         <button type="button" class="btn btn-sm btn-success">Edit</button>
         <button type="button" class="btn btn-sm btn-danger">Remove</button>
       </div>
     </div>
   </div>
-  <!-- } -->
+  }
 </div>
