@@ -16,7 +16,7 @@ export class ExpenseComponent implements OnInit {
   expenses: IExpense[] = [];
   totalExpenses = 0;
 
-  constructor( private expenseService: ExpenseService, private router: Router ) { }
+  constructor(private expenseService: ExpenseService, private router: Router) { }
 
   ngOnInit(): void {
     this.getAllExpenses();
@@ -47,10 +47,18 @@ export class ExpenseComponent implements OnInit {
     });
   }
 
-  editExpense(key: string){
-    // Add a key when you navigate 
+  editExpense(key: string) {
+    // Add a key for that expense you wanna edit
     console.log('Key ==>', key);
     this.router.navigate(['/expense-form/' + key]);
+  }
+
+  removeExpense(key: string) {
+    // doing confirmation before deleting
+    console.log('Key ==>', key);
+    if (window.confirm('Are you sure?')) {
+      this.expenseService.deleteExpense(key);
+    }
   }
 
 }
