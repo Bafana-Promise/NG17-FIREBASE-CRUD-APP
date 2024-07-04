@@ -4,7 +4,7 @@
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
+export const firebaseConfig = {
   apiKey: "AIzaSyDZQt-fhjHjeALXx6CTz4sf9RcfEwzXFBU",
   authDomain: "ng17-firebase-crud-app-88df4.firebaseapp.com",
   databaseURL: "https://ng17-firebase-crud-app-88df4-default-rtdb.firebaseio.com",

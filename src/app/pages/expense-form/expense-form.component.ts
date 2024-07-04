@@ -2,6 +2,9 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { ExpenseService } from '../../core/services/expense.service';
+import { snapshotChanges } from '@angular/fire/compat/database';
+import { IExpense } from '../../core/models/common.model';
 
 @Component({
   selector: 'app-expense-form',
@@ -11,9 +14,10 @@ import { RouterModule } from '@angular/router';
   styleUrl: './expense-form.component.scss'
 })
 export class ExpenseFormComponent implements OnInit{
+  expense: IExpense[] = [];
   expenseForm!: FormGroup;
 
-  constructor(private fb: FormBuilder){
+  constructor(private fb: FormBuilder, private expenseService: ExpenseService){
     this.expenseForm = this.fb.group({
       price: new FormControl('', [Validators.required]),
       title: new FormControl('', [Validators.required]),
@@ -23,6 +27,14 @@ export class ExpenseFormComponent implements OnInit{
 
   ngOnInit(): void {
 
+  }
+
+  getAllExpenses(){
+    this.expenseService.getAllExpenses().snapshotChanges().subscribe({
+      next: (data)=> {
+        console.log('Data ==> ',data)
+      },
+    })
   }
 
   onSubmit(){

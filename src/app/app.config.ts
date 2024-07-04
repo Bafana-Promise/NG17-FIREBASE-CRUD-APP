@@ -6,6 +6,7 @@ import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 
 import { routes } from './app.routes';
+import { firebaseConfig } from './core/constants/constants';
 
 export const appConfig: ApplicationConfig = {
   providers: [provideRouter(routes), importProvidersFrom([
