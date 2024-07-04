@@ -13,7 +13,8 @@ import { IExpense } from '../../core/models/common.model';
 })
 export class ExpenseComponent implements OnInit{
 
-  expense: IExpense[] = [];
+  expenses: IExpense[] = [];
+  totalExpenses = 0;
 
   constructor(private expenseService: ExpenseService){ }
 
@@ -25,6 +26,16 @@ export class ExpenseComponent implements OnInit{
     this.expenseService.getAllExpenses().snapshotChanges().subscribe({
       next: (data)=> {
         console.log('Data ==> ',data)
+        // need to reset this as blank otherwise it will be pushed already
+        this.expenses = [];
+        data.forEach( (item) => {
+          let expense = item.payload.toJSON() as IExpense
+          console.log('Expense ==>', expense)
+          // Converts a string to an integer or A string to convert into a number
+          this.totalExpenses += parseInt(expense.price);
+          // Since Key is optional I will add a empty string
+          // this.expenses
+        })
       },
     })
   }
