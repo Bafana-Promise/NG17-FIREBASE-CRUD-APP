@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { ExpenseService } from '../../core/services/expense.service';
 import { snapshotChanges } from '@angular/fire/compat/database';
 import { IExpense } from '../../core/models/common.model';
@@ -14,10 +14,10 @@ import { IExpense } from '../../core/models/common.model';
   styleUrl: './expense-form.component.scss'
 })
 export class ExpenseFormComponent implements OnInit{
-  expense: IExpense[] = [];
+  expenses: IExpense[] = [];
   expenseForm!: FormGroup;
 
-  constructor(private fb: FormBuilder, private expenseService: ExpenseService){
+  constructor(private fb: FormBuilder, private expenseService: ExpenseService, private router: Router){
     this.expenseForm = this.fb.group({
       price: new FormControl('', [Validators.required]),
       title: new FormControl('', [Validators.required]),
@@ -40,6 +40,8 @@ export class ExpenseFormComponent implements OnInit{
   onSubmit(){
     if(this.expenseForm.valid){
       console.log('Form ==>', this.expenseForm.value);
+      this.expenseService.addExpense(this.expenseForm.value);
+      this.router.navigate(['/']);
     }else{
       this.expenseForm.markAllAsTouched();
     }
