@@ -46,15 +46,19 @@ export class ExpenseFormComponent implements OnInit {
   onSubmit() {
     if (this.expenseForm.valid) {
       console.log('Form ==>', this.expenseForm.value);
-      if (this.expenseId !== '') {
-        this.expenseService.updateExpense(this.expenseId, this.expenseForm.value);
-      }else{
-        this.expenseService.addExpense(this.expenseForm.value);
-      }
-
+      this.expenseService.addExpense(this.expenseForm.value);
+      this.router.navigate(['/']);
+    } if (this.expenseId !== '') {
+      this.expenseService.updateExpense(this.expenseId, this.expenseForm.value);
       this.router.navigate(['/']);
     } else {
       this.expenseForm.markAllAsTouched();
+    }
+  }
+
+  updateExpense() {
+    if (this.expenseId !== '') {
+      this.expenseService.updateExpense(this.expenseId, this.expenseForm.value);
     }
   }
 
